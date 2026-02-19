@@ -29,15 +29,6 @@ export default function InfoPokemon({ pokeName }) {
 
   useEffect(() => {
     async function fetchData() {
-      // const loadingData = new Promise((resolve, reject) => {
-      //   let pokeData = getPokemon(pokeName);
-      //   setPokeInfo(pokeData);
-
-      //   let pokeMoreData = getMorePokemonInfo(pokeName);
-      //   setPokeMoreInfo(pokeMoreData);
-      // });
-
-      // loadingData.then();
       let pokeData = await getPokemon(pokeName);
       setPokeInfo(pokeData);
 
@@ -74,16 +65,6 @@ export default function InfoPokemon({ pokeName }) {
     // console.log(pokeEvolutionInfo);
   }
 
-  // const MaleSign = () => {
-  //   return (
-  //     <img className="w-16 h-16" src="/Gender_Female.png" alt="Female Sign" />
-  //   );
-  // };
-
-  // const FemaleSign = () => {
-  //   return <img className="w-16 h-16" src="/Gender_Male.png" alt="Male Sign" />;
-  // };
-
   function LeftPoke() {
     if (pokeInfo) {
       return (
@@ -111,15 +92,6 @@ export default function InfoPokemon({ pokeName }) {
       return <div></div>;
     }
   }
-
-  // function TextC({ text1, text2 }) {
-  //   return (
-  //     <div className="grid">
-  //       <h3 className="text-lg font-bold">{text1} </h3>
-  //       <h4 className="w-24 text-lg text-center text-sky-600">{text2}</h4>
-  //     </div>
-  //   );
-  // }
 
   function RightPoke() {
     if (pokeInfo && pokeMoreInfo) {
@@ -218,49 +190,56 @@ export default function InfoPokemon({ pokeName }) {
     }
   }
 
-  function InfoChart() {
-    if (pokeEvolve1 && pokeEvolve2) {
-      //
-      const evolveInfo1 = Object.entries(
-        pokeEvolutionInfo.chain.evolves_to[0].evolution_details[0],
+  function EvolveInfo(info, type) {
+    let infoPoke = [];
+    if (type == 1) {
+      infoPoke = Object.entries(
+        info.chain.evolves_to[0].evolution_details[0],
       ).filter(([key, value]) => {
         return value !== null && value !== "" && value !== false;
       });
-      //
-      const objetoLimpio = Object.entries(
-        pokeEvolutionInfo.chain.evolves_to[0].evolution_details[0],
-      );
-      const objl = Object.fromEntries(objetoLimpio);
-      console.log(evolveInfo1);
-      //
-      let textInfo1 = evolveInfo1[0][1];
-      // if(evolveInfo1[0][1])
-      let triggerInfo1 = "";
-      let add1 = false;
-      if (evolveInfo1.length > 1) {
-        triggerInfo1 = evolveInfo1[1][1].name;
-        add1 = true;
-      }
-      // console.log(evolveInfo1);
+    } else {
+      infoPoke = Object.entries(
+        pokeEvolutionInfo.chain.evolves_to[0].evolves_to[0]
+          .evolution_details[0],
+      ).filter(([key, value]) => {
+        return value !== null && value !== "" && value !== false;
+      });
+    }
+
+    return infoPoke;
+  }
+
+  function EvolveDistinction(info) {
+    let arrayPoke = [];
+    let textInfo;
+    if (info[0][0] == "min_level") {
+      textInfo = info[0][1];
+    } else {
+      textInfo = info[0][1].name;
+    }
+    let triggerInfo = "";
+    let add = false;
+    if (info.length > 1) {
+      triggerInfo = info[1][1].name;
+      add = true;
+    }
+    arrayPoke.push(textInfo, triggerInfo, add);
+    return arrayPoke;
+  }
+
+  function InfoChart() {
+    if (pokeEvolve1 && pokeEvolve2) {
+      const evolveInfo1 = EvolveInfo(pokeEvolutionInfo, 1);
+
+      let DataEvolve1 = EvolveDistinction(evolveInfo1);
+      console.log(DataEvolve1);
       //
       if (pokeEvolve3) {
+        const evolveInfo2 = EvolveInfo(pokeEvolutionInfo, 2);
+        let DataEvolve2 = EvolveDistinction(evolveInfo2);
+        console.log(DataEvolve2);
         //
-        const evolveInfo2 = Object.entries(
-          pokeEvolutionInfo.chain.evolves_to[0].evolves_to[0]
-            .evolution_details[0],
-        ).filter(([key, value]) => {
-          return value !== null && value !== "" && value !== false;
-        });
-        //
-        let textInfo2 = evolveInfo2[0][1];
-        let triggerInfo2 = "";
-        let add2 = false;
-        if (evolveInfo2.length > 1) {
-          triggerInfo2 = evolveInfo1[1][1].name;
-          add2 = true;
-        }
-        // console.log(evolveInfo1);
-        // console.log(evolveInfo2);
 
         return (
           <div className="flex items-center justify-between ">
@@ -269,18 +248,18 @@ export default function InfoPokemon({ pokeName }) {
               image={pokeEvolve1.sprites.front_default}
             />
             <ArrowInfo
-              trigger={triggerInfo1}
-              text={textInfo1}
-              additional={add1}
+              trigger={DataEvolve1[1]}
+              text={DataEvolve1[0]}
+              additional={DataEvolve1[2]}
             />
             <ImageChart
               text={pokeEvolve2.name}
               image={pokeEvolve2.sprites.front_default}
             />
             <ArrowInfo
-              trigger={triggerInfo2}
-              text={textInfo2}
-              additional={add2}
+              trigger={DataEvolve2[1]}
+              text={DataEvolve2[0]}
+              additional={DataEvolve2[2]}
             />
             <ImageChart
               text={pokeEvolve3.name}
@@ -296,9 +275,9 @@ export default function InfoPokemon({ pokeName }) {
             image={pokeEvolve1.sprites.front_default}
           />
           <ArrowInfo
-            trigger={triggerInfo1}
-            text={textInfo1}
-            additional={add1}
+            trigger={DataEvolve1[1]}
+            text={DataEvolve1[0]}
+            additional={DataEvolve1[2]}
           />
           <ImageChart
             text={pokeEvolve2.name}
