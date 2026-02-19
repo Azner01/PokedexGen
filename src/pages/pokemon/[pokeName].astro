@@ -4,14 +4,14 @@ import Navbar from "@pages/Layouts/Navbar.astro";
 import Footer from "@pages/Layouts/Footer.astro";
 import InfoPokemon from "@components/InfoPokemon";
 
-const { id } = Astro.params;
+const { pokeName } = Astro.params;
 ---
 
 <Layout>
   <div class="flex flex-col min-h-screen">
     <Navbar />
     <main class="flex-grow pt-16">
-      <InfoPokemon pokeId={id} client:load />
+      <InfoPokemon pokeName={pokeName} client:load />
     </main>
     <Footer />
   </div>

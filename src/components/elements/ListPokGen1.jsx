@@ -7,11 +7,12 @@ export default function ListPokGen1() {
   const [isLoading, setIsLoading] = useState(true);
 
   const loadPokemon = async (data) => {
+    let pokeName = data.results.map((poke) => poke.name);
     let pokemonData = await Promise.all(
-      data.map(async (pokemon) => {
+      pokeName.map(async (pokemon) => {
         let pokemonGet = await getPokemon(pokemon);
         return pokemonGet;
-      })
+      }),
     );
     setPokeList(pokemonData);
     setIsLoading(false);
@@ -21,7 +22,7 @@ export default function ListPokGen1() {
   useEffect(() => {
     async function fetchData() {
       let response = await getAllPokemon();
-      await loadPokemon(response.results);
+      await loadPokemon(response);
     }
     fetchData();
   }, []);
@@ -33,14 +34,17 @@ export default function ListPokGen1() {
           <h2 className="text-2xl pb-96">Cargando ...</h2>
         </div>
       ) : (
-        <div className="grid justify-center gap-4 p-4 xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2">
-          {pokeList.map((data, i) => {
-            return (
-              <div key={i}>
-                <PosterPoke inf={data} id={i} />
-              </div>
-            );
-          })}
+        <div>
+          <h1 className="text-4xl font-medium">Lista de pokemones</h1>
+          <div className="grid justify-center gap-4 py-4 xl:grid-cols-6 md:grid-cols-5 sm:grid-cols-2">
+            {pokeList.map((data, i) => {
+              return (
+                <div key={i}>
+                  <PosterPoke inf={data} id={i} />
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>

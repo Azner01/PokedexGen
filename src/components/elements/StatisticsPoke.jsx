@@ -1,4 +1,4 @@
-export default function ({ data }) {
+export default function StatisticsPoke({ data }) {
   const statistics = [
     "HP:",
     "Attack:",
@@ -9,7 +9,7 @@ export default function ({ data }) {
   ];
 
   return (
-    <div className="grid p-4 bg-gray-400 border-2 rounded-lg ">
+    <div className="grid p-4 border-2 rounded-lg bg-stone-300 border-lime-900">
       {statistics.map((stat, i) => {
         let estilo;
         let colorStat;
@@ -38,7 +38,10 @@ export default function ({ data }) {
             key={i}
           >
             {stat} {data[i].base_stat}
-            <div className="h-4 bg-red-600" style={estilo}></div>
+            <div
+              className="h-4 bg-red-600 border-2 border-black"
+              style={estilo}
+            ></div>
           </h4>
         );
       })}
