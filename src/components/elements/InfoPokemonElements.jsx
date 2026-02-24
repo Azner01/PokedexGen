@@ -97,22 +97,12 @@ export function ArrowInfo({ trigger, text }) {
   return (
     <div className="flex items-center justify-center">
       <div className="absolute z-10 p-10 text-[12px] font-medium text-white">
-        <div className="grid">
+        <div className="grid w-40 text-center text-wrap">
           <h4 className="font-bold"> {trigger} </h4>
-          <h4> {text}</h4>
+          <h4 className=""> {text}</h4>
         </div>
-        {/* {additional ? (
-          <div className="grid">
-            <h4 className="font-bold"> {trigger}: </h4>
-            <h4> {text}</h4>
-          </div>
-        ) : (
-          <div className="grid">
-            <h4> {text}</h4>
-          </div>
-        )} */}
       </div>
-      <img className="h-40 w-36" src="/ArrowRight.png" alt="" />
+      <img className="w-40 h-40" src="/ArrowRight.png" alt="" />
     </div>
   );
 }
@@ -188,4 +178,119 @@ export function ImageChart({ text, image }) {
       <h4 className="text-xl">{text}</h4>
     </div>
   );
+}
+
+export function EvolveInfo(info, type) {
+  let infoPoke = [];
+  let auxPoke = [];
+  for (let i = 0; i < info.chain.evolves_to.length; i++) {
+    //
+    auxPoke = [];
+    if (type == 1) {
+      auxPoke = Object.entries(
+        info.chain.evolves_to[i].evolution_details[0],
+      ).filter(([key, value]) => {
+        return value !== null && value !== "" && value !== false;
+      });
+
+      infoPoke.push(auxPoke);
+    } else {
+      for (let x = 0; x < info.chain.evolves_to[i].evolves_to.length; x++) {
+        auxPoke = Object.entries(
+          info.chain.evolves_to[i].evolves_to[x].evolution_details[0],
+        ).filter(([key, value]) => {
+          return value !== null && value !== "" && value !== false;
+        });
+
+        infoPoke.push(auxPoke);
+      }
+    }
+  }
+  return infoPoke;
+}
+
+export function EvolveDistinction(info) {
+  let arrayPoke = [];
+  let textInfo = [];
+  let triggerInfo = [];
+  let aux = "";
+  //
+  function MoreInfo(textIni, textMore) {
+    let textFinal = "";
+    if (textIni === undefined) {
+      textFinal = textMore;
+      return textFinal;
+    } else {
+      textFinal = textIni + " + " + textMore;
+      return textFinal;
+    }
+  }
+  //
+
+  for (let i = 0; i < info.length; i++) {
+    let lastInfoDetail = info[i].length - 1;
+    if (info[i][lastInfoDetail][1].name === undefined) {
+      aux = info[i][lastInfoDetail][1];
+      triggerInfo[i] = MoreInfo(triggerInfo[i], aux);
+    } else {
+      aux = info[i][lastInfoDetail][1].name;
+      triggerInfo[i] = MoreInfo(triggerInfo[i], aux);
+    }
+    //
+    for (let x = 0; x < info[i].length - 1; x++) {
+      if (
+        info[i][x][0] === "min_level" ||
+        info[i][x][0] === "min_happiness" ||
+        info[i][x][0] === "min_beauty" ||
+        info[i][x][0] === "time_of_day"
+      ) {
+        aux = info[i][x][1];
+        textInfo[i] = MoreInfo(textInfo[i], aux);
+      } else if (info[i][x][0] == "gender") {
+        switch (info[i][1]) {
+          case 1:
+            aux = "Female";
+            textInfo[i] = MoreInfo(textInfo[i], aux);
+            break;
+          case 2:
+            aux = "Male";
+            textInfo[i] = MoreInfo(textInfo[i], aux);
+            break;
+        }
+      } else if (info[i][x][0] == "relative_physical_stats") {
+        switch (info[i][x]) {
+          case 1:
+            aux = "Attack>Defense";
+            textInfo[i] = MoreInfo(textInfo[i], aux);
+            break;
+          case -1:
+            aux = "Attack<Defense";
+            textInfo[i] = MoreInfo(textInfo[i], aux);
+            break;
+          case 0:
+            aux = "Attack=Defense";
+            textInfo[i] = MoreInfo(textInfo[i], aux);
+            break;
+        }
+      } else if (info[i][x][0] == "turn_upside_down") {
+        aux = "Turn upside down";
+        textInfo[i] = MoreInfo(textInfo[i], aux);
+      } else if (info[i][x][0] == "needs_overworld_rain") {
+        aux = "Needs overworld rain";
+        textInfo[i] = MoreInfo(textInfo[i], aux);
+      } else if (info[i][x][0] == "known_move_type") {
+        aux = "Know " + info[i][x][1].name + " move";
+        textInfo[i] = MoreInfo(textInfo[i], aux);
+      } else if (info[i][x][0] == "min_affection") {
+        aux = "Min affection:" + info[i][x][1];
+        textInfo[i] = MoreInfo(textInfo[i], aux);
+      } else {
+        aux = info[i][x][1].name;
+        textInfo[i] = MoreInfo(textInfo[i], aux);
+      }
+    }
+  }
+  //
+  arrayPoke.push(textInfo, triggerInfo);
+  return arrayPoke;
 }
