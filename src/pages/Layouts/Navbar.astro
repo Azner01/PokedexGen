@@ -7,13 +7,14 @@ import SearchBarPoke from "@components/elements/SearchBarPoke";
   <div class="flex justify-between flex-1 w-full place-items-center">
     <h1 class="text-3xl text-white hover:opacity-75">
       <button>
-        <a href="/">PokeDexGen1</a>
+        <a href="/">PokeDexGen</a>
       </button>
     </h1>
     <SearchBarPoke client:load />
     <div class="flex gap-4">
-      <ButtonNavbar client:load text="Frameworks" />
-      <ButtonNavbar client:load text="Ayuda" />
+      <ButtonNavbar client:load text="Moves" url="/Moves" />
+      <ButtonNavbar client:load text="Abilities" url="/Abilities" />
+      <ButtonNavbar client:load text="Items" url="/Items" />
     </div>
   </div>
 </navbar>

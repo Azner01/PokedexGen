@@ -10,7 +10,7 @@ const { pokeName } = Astro.params;
 <Layout>
   <div class="flex flex-col min-h-screen">
     <Navbar />
-    <main class="flex-grow pt-16">
+    <main class="flex-grow pt-16 bg-[url('/BackgroundPokemon.jpg')]">
       <InfoPokemon pokeName={pokeName} client:load />
     </main>
     <Footer />

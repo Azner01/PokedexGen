@@ -9,10 +9,10 @@ export default function PosterPoke({ inf, id }) {
   let pokeName = UpperWord(name);
 
   return (
-    <div className="grid justify-center ">
+    <div className="grid justify-center p-2 bg-white border border-black rounded-md">
       <button className="size-full hover:opacity-25  w-[200px]">
         <a href={"/pokemon/" + pokeName}>
-          <div className="grid justify-center p-2 px-6 pb-8 border border-black rounded-md ">
+          <div className="grid justify-center p-2 px-6 pb-8 ">
             <h4 className="text-xl font-bold text-blue-500 place-self-start">
               #{id + 1}
             </h4>

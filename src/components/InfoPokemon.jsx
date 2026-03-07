@@ -6,10 +6,6 @@ import {
   getEvolutionInfo,
 } from "@src/service/PokeAPI";
 import UpperWord from "@components/UpperWord";
-// import TypeColor from "@components/elements/typeColor";
-// import StatisticsPoke from "@components/elements/StatisticsPoke";
-// import ArrowInfo from "@components/elements/ArrowInfo";
-// import ImageChart from "@components/elements/ImageChart";
 import {
   TypeColor,
   ArrowInfo,
@@ -22,6 +18,31 @@ import {
 } from "@components/elements/InfoPokemonElements";
 
 export default function InfoPokemon({ pokeName }) {
+  //Solo pondre los juegos originales y no remakes
+  const pokeTextChoose = [
+    "Red",
+    "Blue",
+    "Yellow",
+    "Gold",
+    "Silver",
+    "Crystal",
+    "Ruby",
+    "Sapphire",
+    "Emerald",
+    "Diamond",
+    "Pearl",
+    "Platinum",
+    "Black",
+    "White",
+    "X",
+    "Y",
+    "Sun",
+    "Moon",
+    "Sword",
+    "Shield",
+  ];
+  const [pokeTextInfo, setPokeTextInfo] = useState("Red");
+  const [selectTextInfo, setSelectTextInfo] = useState();
   const [pokeInfo, setPokeInfo] = useState();
   const [pokeMoreInfo, setPokeMoreInfo] = useState();
   const [pokeEvolutionInfo, setPokeEvolutionInfo] = useState();
@@ -31,6 +52,7 @@ export default function InfoPokemon({ pokeName }) {
 
   useEffect(() => {
     async function fetchData() {
+      //Datos de Pokemon
       let pokeData = await getPokemon(pokeName);
       setPokeInfo(pokeData);
 
@@ -69,13 +91,10 @@ export default function InfoPokemon({ pokeName }) {
           );
         }
         //
-        // if (pokeE2.length === undefined) {
-        //   console.log(pokeE2);
-        //   console.log("Hoola");
-        // }
         setPokeEvolve1(pokeE1);
         setPokeEvolve2(pokeE2);
 
+        //Datos de Evolución
         for (let i = 0; i < pokeEvolutionData.chain.evolves_to.length; i++) {
           if (
             pokeEvolutionData.chain.evolves_to[i].evolves_to &&
@@ -104,6 +123,15 @@ export default function InfoPokemon({ pokeName }) {
         setPokeEvolve3(pokeE3);
       }
       setPokeEvolutionInfo(pokeEvolutionData);
+
+      //Datos de texto
+
+      let listTextChoose = pokeTextChoose.map((data) => data.toLowerCase());
+      let filtroTextChoose = [];
+      filtroTextChoose = pokeMoreData.flavor_text_entries
+        .filter((data) => data.language.name == "en")
+        .filter((data) => listTextChoose.includes(data.version.name));
+      setSelectTextInfo(filtroTextChoose);
     }
     fetchData();
   }, []);
@@ -113,7 +141,7 @@ export default function InfoPokemon({ pokeName }) {
     if (pokeInfo) {
       return (
         <div className="grid gap-4 ">
-          <div className="bg-gray-300 border border-gray-300 rounded-md">
+          <div className="border border-gray-300 rounded-md bg-stone-200">
             <div className="flex gap-12 border-2 border-lime-900">
               <img
                 className="w-80 h-80"
@@ -122,7 +150,7 @@ export default function InfoPokemon({ pokeName }) {
               />
             </div>
           </div>
-          <div className="grid justify-center gap-2 p-2 text-center border-2 border-lime-900 bg-stone-300">
+          <div className="grid justify-center gap-2 p-2 text-center border-2 border-lime-900 bg-stone-200">
             <h3 className="text-2xl font-medium">Type</h3>
             <div className="flex gap-4">
               {pokeInfo.types.map((data, i) => {
@@ -137,11 +165,11 @@ export default function InfoPokemon({ pokeName }) {
     }
   }
 
-  function RightPoke() {
+  function CenterPoke() {
     if (pokeInfo && pokeMoreInfo) {
       return (
         // {pokeInfo ? ( ) : ()}
-        <div className="grid gap-2 text-center border-2 rounded-md bg-stone-200 border-lime-900">
+        <div className="grid gap-2 text-center border-2 rounded-md bg-stone-200 border-lime-900 ">
           <div className="grid p-3 border border-black rounded-md ">
             <div className="grid grid-cols-2 gap-4 ">
               <TextC text1="Height" text2={pokeInfo.height + " m"} />
@@ -150,7 +178,7 @@ export default function InfoPokemon({ pokeName }) {
               <TextC text1="Category" text2={pokeMoreInfo.genera[7].genus} />
             </div>
             <div className="grid justify-center gap-2">
-              <h3 className="text-xl font-bold text-center">Género</h3>
+              <h3 className="text-xl font-bold text-center">Gender</h3>
               <div className="flex">
                 {pokeMoreInfo.gender_rate === -1 ? (
                   <h3>Undiscovered</h3>
@@ -174,12 +202,62 @@ export default function InfoPokemon({ pokeName }) {
     }
   }
 
+  function RightPoke() {
+    const ChangeText = (value) => {
+      setPokeTextInfo(value);
+    };
+    if (pokeMoreInfo && selectTextInfo) {
+      return (
+        <div className="w-[400px] max-w-sm gap-2 text-center border-2 rounded-md bg-stone-200 border-lime-900">
+          <div className="grid gap-2 p-4 group">
+            <div className="grid">
+              <button className="flex justify-between w-40 h-8 bg-white border-2 border-black ">
+                <h3 className="pl-2">{pokeTextInfo}</h3>
+                <img src="/Arrow_Down.png" alt="" />
+              </button>
+              <div className="absolute z-10 hidden w-40 h-40 my-8 overflow-y-auto bg-white border-b border-black border-x group-focus-within:block">
+                <ul className="grid divide-y divide-gray-300">
+                  {pokeTextChoose.map((data, key) => {
+                    return (
+                      <button
+                        className="h hover:bg-gray-400"
+                        key={key}
+                        value={data}
+                        onClick={(e) => ChangeText(e.currentTarget.value)}
+                      >
+                        <li className="hover:text-blue-500 ">{data}</li>
+                      </button>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+            <h2 className="font-bold text-left">Description</h2>
+            <div className="grid p-2 h-[300px] border-2 border-black text-justify">
+              {selectTextInfo.map((data, key) => {
+                if (data.version.name == pokeTextInfo.toLowerCase()) {
+                  return (
+                    <p key={key}>
+                      {data.flavor_text.replace(/[\n\f\r]/g, " ")}
+                    </p>
+                  );
+                }
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }
+
   function Abilities() {
     if (pokeInfo) {
       return (
-        <div className="">
+        <div className="grid gap-2">
           <h2 className="text-3xl font-bold">Ability</h2>
-          <div className="grid gap-8 p-2 text-center border border-lime-900 bg-stone-300">
+          <div className="grid gap-4 p-4 text-center border border-lime-900 bg-stone-200">
             <div className="flex justify-between gap-4">
               <h3 className="text-2xl font-semibold">Ability:</h3>
               <div className="grid">
@@ -197,6 +275,7 @@ export default function InfoPokemon({ pokeName }) {
                 )}
               </div>
             </div>
+            <hr className="h-[2px] bg-black" />
             <div className="flex justify-between gap-4">
               <h3 className="text-2xl font-semibold">Hidden Ability:</h3>
               {pokeInfo.abilities.map((data, i) =>
@@ -222,7 +301,7 @@ export default function InfoPokemon({ pokeName }) {
   function Statistics() {
     if (pokeInfo) {
       return (
-        <div>
+        <div className="">
           <div className="grid gap-2 ">
             <h3 className="text-3xl font-bold">Stadistics</h3>
             <StatisticsPoke data={pokeInfo.stats} />
@@ -299,7 +378,7 @@ export default function InfoPokemon({ pokeName }) {
                 <div className="flex items-center justify-between">
                   <ArrowInfo trigger={DataEvolve2[1]} text={DataEvolve2[0]} />
                   <ImageChart
-                    text={pokeEvolve3.name}
+                    text={pokeEvolve3[0].name}
                     image={pokeEvolve3[0].sprites.front_default}
                   />
                 </div>
@@ -346,8 +425,8 @@ export default function InfoPokemon({ pokeName }) {
       );
     } else {
       return (
-        <div className="grid items-center justify-center ">
-          <h3 className="text-3xl font-bold">Does not evolve</h3>
+        <div className="grid items-center justify-center">
+          <h3 className="text-3xl font-bold text-center">Does not evolve</h3>
         </div>
       );
     }
@@ -358,7 +437,7 @@ export default function InfoPokemon({ pokeName }) {
       return (
         <div className="grid gap-2">
           <h3 className="text-3xl font-bold">Evolution Chart</h3>
-          <div className="flex items-center justify-between p-2 border-2 rounded-md border-lime-900 bg-stone-300 ">
+          <div className="flex items-center justify-between p-2 border-2 rounded-md border-lime-900 bg-stone-200 ">
             <InfoChart />
           </div>
         </div>
@@ -380,8 +459,9 @@ export default function InfoPokemon({ pokeName }) {
               </h2>
             </div>
 
-            <div className="flex gap-2 p-2">
+            <div className="flex gap-2">
               <LeftPoke />
+              <CenterPoke />
               <RightPoke />
             </div>
           </div>

@@ -1,6 +1,21 @@
 const PokeAPI = "https://pokeapi.co/api/v2/";
 
-export async function getPokemon(name){
+export async function DataInfo(url: string){
+    // let evolution = PokeAPI + "evolution-chain/"+id
+    try{
+        const resp = await fetch(url)
+        if(!resp.ok){
+            throw new Error ("No se encontro la información")
+        }
+        return await resp.json()
+
+    }catch(error){
+        console.error("Error en getEvolutionInfo:", error)
+        return null
+    }
+}
+//////////////////////////////////////////////////////////////////
+export async function getPokemon(name: string){
     let gen1 = PokeAPI + "pokemon/" + name;
     // return new Promise((resolve, reject)=>{
     //     fetch(gen1).then(res=>res.json()).then(data=>{
@@ -20,7 +35,7 @@ export async function getPokemon(name){
     }
 }
 
-export async function getPokemonID(id){
+export async function getPokemonID(id: number){
     let poke = PokeAPI + "pokemon/" + id;
     try{
         const resp = await fetch(poke)
@@ -34,8 +49,9 @@ export async function getPokemonID(id){
     }
 }
 
-export async function getAllPokemon(){
-    let gen1 = PokeAPI+"pokemon/?offset=0&limit=151";
+export async function getAllPokemon(offset: number){
+    const limit = 18;
+    let gen1 = PokeAPI+"pokemon/?offset="+offset+"&limit="+limit;
     try{
         const resp = await fetch(gen1)
         if(!resp.ok){
@@ -49,7 +65,7 @@ export async function getAllPokemon(){
     }
 }
 
-export async function getMorePokemonInfo(id){
+export async function getMorePokemonInfo(id: number){
     let poke = PokeAPI + "pokemon-species/" + id +"/";
     try{
         const resp = await fetch(poke)
@@ -63,8 +79,8 @@ export async function getMorePokemonInfo(id){
         return null
     }
 }
-
-export async function getEvolutionInfo(url){
+//////////////////////////////////////////////////////////////////
+export async function getEvolutionInfo(url: string){
     // let evolution = PokeAPI + "evolution-chain/"+id
     try{
         const resp = await fetch(url)
@@ -78,9 +94,58 @@ export async function getEvolutionInfo(url){
         return null
     }
 }
+//////////////////////////////////////////////////////////////////
+export async function getAllMoves(){
+    let ability = PokeAPI + "/move" 
+    try{
+        const resp = await fetch(ability)
+        if(!resp.ok){
+            throw new Error("No se encontro ninguna abilidad")
+        }
+        return await resp.json()
 
-export async function getAbilityInfo(name){
-    let ability = PokeAPI + "/" + name
+    }catch(error){
+        console.error("Error en getAbility: ", error)
+        return null
+    }
+
+}
+
+
+export async function getMoveInfo(name: string){
+    let ability = PokeAPI + "/move" + name
+    try{
+        const resp = await fetch(ability)
+        if(!resp.ok){
+            throw new Error("No se encontro ninguna abilidad")
+        }
+        return await resp.json()
+
+    }catch(error){
+        console.error("Error en getAbility: ", error)
+        return null
+    }
+
+}
+//////////////////////////////////////////////////////////////////
+export async function getAllAbility(){
+    let ability = PokeAPI + "/ability"
+    try{
+        const resp = await fetch(ability)
+        if(!resp.ok){
+            throw new Error("No se encontro ninguna abilidad")
+        }
+        return await resp.json()
+
+    }catch(error){
+        console.error("Error en getAbility: ", error)
+        return null
+    }
+
+}
+
+export async function getAbilityInfo(name: string){
+    let ability = PokeAPI + "/ability" + name
     try{
         const resp = await fetch(ability)
         if(!resp.ok){

@@ -131,7 +131,7 @@ export function StatisticsPoke({ data }) {
   ];
 
   return (
-    <div className="grid p-4 border-2 rounded-lg bg-stone-300 border-lime-900">
+    <div className="grid p-4 border-2 rounded-lg bg-stone-200 border-lime-900">
       {statistics.map((stat, i) => {
         let estilo;
         let colorStat;
