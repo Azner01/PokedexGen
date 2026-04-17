@@ -2,7 +2,7 @@
 import Layout from "@layouts/Layout.astro";
 import Navbar from "@pages/Layouts/Navbar.astro";
 import Footer from "@pages/Layouts/Footer.astro";
-// import InfoPokemon from "@components/InfoPokemon";
+import InfoMoves from "@components/InfoMoves";
 
 const { pokeMoveName } = Astro.params;
 ---
@@ -11,7 +11,7 @@ const { pokeMoveName } = Astro.params;
   <div class="flex flex-col min-h-screen">
     <Navbar />
     <main class="flex-grow pt-16 bg-[url('/BackgroundPokemon.jpg')]">
-      <!-- <InfoPokemon pokeName={pokeMoveName} client:load /> -->
+      <InfoMoves dataMove={pokeMoveName} client:load />
     </main>
     <Footer />
   </div>

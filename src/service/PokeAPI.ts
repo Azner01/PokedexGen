@@ -94,9 +94,9 @@ export async function getEvolutionInfo(url: string){
         return null
     }
 }
-//////////////////////////////////////////////////////////////////
-export async function getAllMoves(){
-    let ability = PokeAPI + "/move" 
+////////////////////////////////////////////////////////////////// move?offset=00&limit=20"
+export async function getAllMoves(offset: Number, limit: Number){
+    let ability = PokeAPI + "/move?offset="+offset+"&limit="+limit 
     try{
         const resp = await fetch(ability)
         if(!resp.ok){
@@ -113,7 +113,7 @@ export async function getAllMoves(){
 
 
 export async function getMoveInfo(name: string){
-    let ability = PokeAPI + "/move" + name
+    let ability = PokeAPI + "/move/" + name
     try{
         const resp = await fetch(ability)
         if(!resp.ok){
@@ -145,7 +145,7 @@ export async function getAllAbility(){
 }
 
 export async function getAbilityInfo(name: string){
-    let ability = PokeAPI + "/ability" + name
+    let ability = PokeAPI + "/ability/" + name
     try{
         const resp = await fetch(ability)
         if(!resp.ok){
